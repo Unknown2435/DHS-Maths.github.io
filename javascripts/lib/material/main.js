@@ -95,6 +95,12 @@ oliverC.block=function(){
         obj.style.padding=parseInt($(obj).css("font-size"))*0.4+"px";
         obj.style.marginTop="0px";
     }
+    objs=document.getElementsByClassName("rect");
+    for(var i=0;i<objs.length;i++){
+        obj=objs[i];
+        obj.style.padding=parseInt($(obj).css("font-size"))*0.4+"px";
+        obj.style.marginTop="0px";
+    }
 }
 oliverC.filt=function(id,tag,filter){
     if(filter){
