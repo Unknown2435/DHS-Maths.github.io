@@ -64,56 +64,91 @@
     	    	}
     	    	output+='</h4><br>';
     	    	target.innerHTML+=output;
-    	    	if(n==2){solutions.push(decDiv(coeff[1],coeff[0]));return;}
+    	    	if(n==2){solutions.push(decDiv([-coeff[1][0],coeff[1][1]],coeff[0]));return;}
     	    	var A=factorise(coeff[0]),B=factorise(coeff[n-1]);
     	    	for(var i=0;i<A.length;i++){
     	    		for(var j=0;j<B.length;j++){
     	    			if(check(coeff,n,[B[j],A[i]])){
     	    				target.innerHTML+=[B[j],A[i]]+"<br>";
-    	    				solutions.push([1,1],decMul([B[j],A[i]],[-1,1]));
+    	    				solutions.push(decMul([B[j],A[i]],[1,1]));
     	    				root(next(coeff,n,[B[j],A[i]]),n-1);
+    	    				return;
+    	    			}
+    	    			if(check(coeff,n,[B[j],-A[i]])){
+    	    				target.innerHTML+=[B[j],-A[i]]+"<br>";
+    	    				solutions.push(decMul([B[j],-A[i]],[1,1]));
+    	    				root(next(coeff,n,[B[j],-A[i]]),n-1);
     	    				return;
     	    			}
     	    		}
     	    	}
-    	    	solutions.push(coeff);
     	    }
-    	    function factorise(A){
-    	    	if(A.length)A=A[0];
+    	    function factorise(a){
+    	    	var A;
+    	    	if(a.length)if(a[0]>=0)A=a[0];else A=-a[0];
+    	    	else if(a>=0)A=a;else A=-a;
     	    	var factors=[];
     	    	for(var i=1;i<=Math.sqrt(A);i++){
     	    		if(A%i==0){
     	    			if(A/i==i){
     	    				factors.push(i);
-    	    				factors.push(-i);
     	    			}else{
     	    				factors.push(i);
-    	    				factors.push(-i);
     	    				factors.push(A/i);
-    	    				factors.push(-A/i);
     	    			}
     	    		}
     	    	}
     	    	return factors;
     	    }
-    	    function solve(){
-    	    	var p=0,str=document.getElementById("value").value;target=document.getElementById("res");
-    	    	coeff=[];
-    	    	for(var i=0;i<str.length;i++){
-    	    		if(str[i]==' '){coeff.push([p,1]);p=0;}
-    	    		else{
-    	    			p=p*10+parseInt(str[i]);
+    	    function outStr(A,pm=0){
+    	    	var res="";
+    	    	if(A[1]<0)A[0]=-A[0],A[1]=-A[1];
+    	    	if(pm==1){
+    	    		if(A[0]>=0){
+    	    			res="+";
+    	    			if(A[1]==1)res+=A[0];
+    	    			else res+=A[0]+"/"+A[1];
+    	    		}else{
+    	    			if(A[1]==1)res+=A[0];
+    	    			else res+=A[0]+"/"+A[1];
+    	    		}
+    	    	}else{
+    	    		if(A[0]>=0){
+    	    			if(A[1]==1)res+=A[0];
+    	    			else res+=A[0]+"/"+A[1];
+    	    		}else{
+    	    			if(A[1]==1)res+=A[0];
+    	    			else res+=A[0]+"/"+A[1];
     	    		}
     	    	}
-    	    	if(p!=0)coeff.push([p,1]);
+    	    	return res;
+    	    }
+    	    function solve(){
+    	    	var p=0,str=document.getElementById("value").value,neg=false,i;target=document.getElementById("res");
+    	    	coeff=[];
+    	    	for(i=0;str[i]==" ";i++);
+    	    	target.innerHTML=i;
+    	    	for(;i<str.length;i++){
+    	    		if(str[i]==' '){if(neg)coeff.push([-p,1]);else coeff.push([p,1]);p=0;neg=false;for(;str[i]==" ";i++);i-=1;}
+    	    		else{
+    	    			if(str[i]=="-")neg=true;
+    	    			else p=p*10+parseInt(str[i]);
+    	    		}
+    	    	}
+    	    	if(p!=0){if(neg)coeff.push([-p,1]);else coeff.push([p,1]);}
     	    	target.innerHTML=coeff;
     	    	solutions=[];
     	    	root(coeff,coeff.length);
-    	    	target.innerHTML=solutions.length+"<br>";
-    	    	for(var i=0;i<solutions.length;i++){
-    	    		target.innerHTML+="`"+solutions[i][0]+"/"+solutions[i][1]+"`<br>";
+    	    	if(solutions.length==1){
+    	    		target.innerHTML="There is `"+solutions.length+"` rational solution.<br>"+"`x="+outStr(solutions[0])+"`<br>";
     	    	}
-				formulae();
+    	    	else{
+    	    		target.innerHTML="There are `"+solutions.length+"` rational solutions.<br>";
+	    	    	for(i=0;i<solutions.length;i++){
+	    	    		target.innerHTML+="`x`<sub>`"+(i+1)+"`</sub>`="+outStr(solutions[i])+"`<br>";
+	    	    	}
+    	    	}
+				MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
     	    }
     	</script>
     	<style>
