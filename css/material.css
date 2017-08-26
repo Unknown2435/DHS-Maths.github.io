@@ -64,3 +64,15 @@ html {
 -ms-overflow-style:none;
 overflow:-moz-scrollbars-none;
 }
+.res320{
+    float:left;
+    max-width:320px;
+}
+.res320_end{
+    clear:both;
+}
+.MathJaxFont{
+    font-family:MathJax_Math;
+    font-style:italic;
+    font-size:16px;
+}

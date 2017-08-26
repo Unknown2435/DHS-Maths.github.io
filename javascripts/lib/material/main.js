@@ -68,6 +68,22 @@ oliverC.refresh=function(){
 }
 oliverC.resize=function(){
     document.getElementById("container1").style.width=document.getElementById("container2").offsetWidth+18+"px";
+    var imgWidth,imgHeight;
+    if($(window).width()<=410){
+        $(".res320").css("max-width",$(window).width()+"px");
+        $(".res320_div").css("text-align","center");
+        $(".MathJaxFont").css("font-family","MathJax_Math");
+        imgWidth=$(window).width();
+        imgHeight=imgWidth*180/320;
+    }else{
+        $(".MathJaxFont").css("font-family","MathJax_Math-italic");
+        $(".res320_div").css("text-align","left");
+        $(".res320").css("max-width","410px");
+        imgWidth=410;
+        imgHeight=imgWidth*180/320;
+    }
+    $(".res320 img").css("width",imgWidth);
+    $(".res320 img").css("height",imgHeight);
     if(document.body.clientWidth<=500){
         if(document.body.clientWidth<=350)searchWidth="150px"; else searchWidth="200px";
         $("#heading").css("font-size","30px");

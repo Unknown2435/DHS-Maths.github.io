@@ -14,8 +14,8 @@ var base='  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header"> \
                     <div id="searchingBox" height="300px"><ul id="searchingList"></ul></div> \
                     </div> \
                 </header> \
-                <div class="mdl-layout__drawer" style="overflow-y:hidden" id="container2"> \
-                    <div style="overflow-y:scroll;overflow-x:hidden" id="container1"> \
+                <div class="mdl-layout__drawer" style="overflow-y:hidden;overflow-x:hidden" id="container2"> \
+                    <div style="overflow-y:scroll;overflow-x:hidden;position:relative;left:0px" id="container1">\
                     <a class="block" href="/" style="font-size:36px;margin-top:15px;">Home</a> \
                     <a class="block" style="font-size:36px" target="y1" href="javascript:void(0);" id="y_1">Topics</a> \
                     <div id="y1" class="hide"></div>\
