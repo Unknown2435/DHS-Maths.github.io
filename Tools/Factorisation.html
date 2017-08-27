@@ -5,7 +5,7 @@
     	<script src="/javascripts/nmInclude.js"></script>
     	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML"></script>
     	<script>
-    	    var coeff=[],target,solutions=[];
+    	    var coeff=[],target,solutions=[],infinite=false;
     	    window.onload=layout;
     	    function lcf(a,b){
     	    	if(b==0)return a;
@@ -58,7 +58,7 @@
     	    	return nxt;
     	    }
     	    function root(coeff,n){
-    	    	var output='<h4>'+n+":";
+    	    	var output='<h4>'+n+":",zero;
     	    	for(var i=0;i<n;i++){
     	    		output+=coeff[i][0]+"/"+coeff[i][1]+" ";
     	    	}
@@ -74,7 +74,7 @@
     	    				root(next(coeff,n,[B[j],A[i]]),n-1);
     	    				return;
     	    			}
-    	    			if(check(coeff,n,[B[j],-A[i]])){
+    	    			else if(check(coeff,n,[B[j],-A[i]])){
     	    				target.innerHTML+=[B[j],-A[i]]+"<br>";
     	    				solutions.push(decMul([B[j],-A[i]],[1,1]));
     	    				root(next(coeff,n,[B[j],-A[i]]),n-1);
@@ -124,22 +124,36 @@
     	    	return res;
     	    }
     	    function solve(){
-    	    	var p=0,str=document.getElementById("value").value,neg=false,i;target=document.getElementById("res");
-    	    	coeff=[];
+    	    	var num="",str=document.getElementById("value").value,neg=false,i;target=document.getElementById("res");
+    	    	coeff=[];infinite=false;
     	    	for(i=0;str[i]==" ";i++);
     	    	target.innerHTML=i;
     	    	for(;i<str.length;i++){
-    	    		if(str[i]==' '){if(neg)coeff.push([-p,1]);else coeff.push([p,1]);p=0;neg=false;for(;str[i]==" ";i++);i-=1;}
+    	    		if(str[i]==' '){if(neg)coeff.push([-parseInt(num),1]);else coeff.push([parseInt(num),1]);num="";neg=false;for(;str[i]==" ";i++);i-=1;}
     	    		else{
     	    			if(str[i]=="-")neg=true;
-    	    			else p=p*10+parseInt(str[i]);
+    	    			else num+=str[i];
     	    		}
     	    	}
-    	    	if(p!=0){if(neg)coeff.push([-p,1]);else coeff.push([p,1]);}
+    	    	if(num!=""){if(neg)coeff.push([-parseInt(num),1]);else coeff.push([parseInt(num),1]);}
     	    	target.innerHTML=coeff;
     	    	solutions=[];
-    	    	root(coeff,coeff.length);
-    	    	if(solutions.length==1){
+    	    	if(coeff[0][0]==0){
+    	    		var t=[],right=coeff.length-1,left=0;
+    	    		for(;left<coeff.length&&coeff[left][0]==0;left++);
+    	    		for(;right>=0&&coeff[right][0]==0;right--)solutions.push([0,1]);
+    	    		for(var i=left;i<=right;i++)t.push(coeff[i]);
+    	    		if(t.length>=2)root(t,t.length);
+    	    		else if(t.length==0)infinite=true;
+    	    	}
+    	    	else root(coeff,coeff.length);
+    	    	if(infinite){
+    	    		target.innerHTML="The solution is `x in RR`.";
+    	    	}
+    	    	if(solutions.length==0){
+    	    		target.innerHTML="There are no rational solutions.";
+    	    	}
+    	    	else if(solutions.length==1){
     	    		target.innerHTML="There is `"+solutions.length+"` rational solution.<br>"+"`x="+outStr(solutions[0])+"`<br>";
     	    	}
     	    	else{
@@ -147,6 +161,7 @@
 	    	    	for(i=0;i<solutions.length;i++){
 	    	    		target.innerHTML+="`x`<sub>`"+(i+1)+"`</sub>`="+outStr(solutions[i])+"`<br>";
 	    	    	}
+	    	    	target.innerHTML+="`***`Equal roots are not counted as one."
     	    	}
 				MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
     	    }
